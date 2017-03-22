@@ -1,10 +1,11 @@
-django-pgcrypto
+django-object-crypto
 ===============
 
-A set of utility functions for dealing with ASCII Armor (http://www.ietf.org/rfc/rfc2440.txt) and padding, and
-a collection of Django field classes that utilize these functions in a way that is compatible with pgcrypto functions.
+TL;TR Django object level encryption. 
 
-Documentation
+A modification of `django-pgcrypto <https://github.com/dcwatson/django-pgcrypto>` package of Dan Watson.
+
+Documenation
 -------------
+see docs/index.rst for a short example.
 
-http://django-pgcrypto.readthedocs.org/en/latest/
