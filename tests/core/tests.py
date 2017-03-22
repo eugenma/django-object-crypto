@@ -3,6 +3,7 @@ import decimal
 import json
 import os
 import threading
+import unittest
 
 from Cryptodome.Cipher import AES, Blowfish
 from django.test import TestCase
@@ -161,6 +162,7 @@ class CryptoTests (TestCase):
 _LOCALS = threading.local()
 
 # TODO: Test with postgres!
+@unittest.skip("not implemented yet")
 class FieldTestsPostgres (TestCase):
     # fixtures = ('employees',)
     multi_db = True

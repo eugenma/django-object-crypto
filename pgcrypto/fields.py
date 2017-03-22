@@ -276,7 +276,9 @@ if django.VERSION >= (1, 7):
 
             lhs, lhs_params = self.process_lhs(qn, connection)
             rhs, rhs_params = self.process_rhs(qn, connection)
+
             rhs_params_encrypted = [self.lhs.output_field.encrypt(param) for param in rhs_params]
+
             params = lhs_params + rhs_params_encrypted
             op_rhs = connection.operators[self.lookup_name] % rhs
 
