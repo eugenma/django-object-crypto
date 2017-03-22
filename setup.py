@@ -9,24 +9,26 @@ def get_version():
         return re.match(r".*__version__ = '(.*?)'", fp.read(), re.S).group(1)
 
 setup(
-    name='django-pgcrypto',
+    name='django-object-crypto',
     version=get_version(),
-    description='Python and Django utilities for encrypted fields using pgcrypto.',
-    author='Dan Watson',
-    author_email='dcwatson@gmail.com',
-    url='https://github.com/dcwatson/django-pgcrypto',
+    description='Python and Django utilities for per-object encryption using pgcrypto.',
+    long_description='Code base is from the original `django-pgcrypto package <https://github.com/dcwatson/django-pgcrypto> '
+    author='Eugen Massini, Dan Watson',
+    author_email='eugen.massini@gmail.com',
+    url='https://github.com/eugenma/django-object-crypto',
     license='BSD',
     packages=find_packages(),
     install_requires=[
-        'pycrypto>=2.6',
+        'pycryptodomex>=3.4',
     ],
     classifiers=[
-        'Development Status :: 5 - Production/Stable',
+        'Development Status :: 2 - Pre-Alpha',
         'Framework :: Django',
         'Intended Audience :: Developers',
         'License :: OSI Approved :: BSD License',
-        'Programming Language :: Python :: 2',
+        #'Programming Language :: Python :: 2',
         'Programming Language :: Python :: 3',
         'Topic :: Database',
+        'Topic :: Security :: Cryptography',
     ]
 )

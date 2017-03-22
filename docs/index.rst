@@ -1,4 +1,4 @@
-Welcome to django-pgcrypto's documentation!
+Welcome to django-object-crypto's documentation!
 ===========================================
 
 Quickstart
@@ -9,31 +9,45 @@ There are several encrypted versions of Django fields that you can use (mostly) 
     from django.db import models
     import pgcrypto
     
-    class Employee (models.Model):
+    class Employee (pgcrypto.BaseCryptoModel):
         name = models.CharField(max_length=100)
         ssn = pgcrypto.EncryptedTextField()
         pay_rate = pgcrypto.EncryptedDecimalField()
-        date_hired = pgcrypto.EncryptedDateField(cipher='Blowfish', key='datekey')
+        date_hired = pgcrypto.EncryptedDateField()
 
-If not specified when creating the field (as in the ``date_hired`` field above), fields are encrypted according to the following settings:
+Fields are encrypted according to the following settings:
 
-``PGCRYPTO_VALID_CIPHERS`` (default: ``('AES', 'Blowfish')``):
+``PGCRYPTO['VALID_CIPHERS']`` (default: ``('AES', 'Blowfish')``):
     A list of valid PyCrypto cipher names. Currently only AES and Blowfish are supported, so this setting is mostly for future-proofing.
 
-``PGCRYPTO_DEFAULT_CIPHER`` (default: ``'AES'``):
+``PGCRYPTO['CIPHER']`` (default: ``'Blowfish'``):
     The PyCrypto cipher to use when encrypting fields.
 
-``PGCRYPTO_DEFAULT_KEY`` (default: ``''``):
-    The default key to use for encryption.
+
+Furthermore it is required that the model inherit from ``pgcrypto.BaseCryptoModel``.
+
+
+Creating
+------------
+In Django there are two possibilities how to create a model object. On encryption models is is required to provide
+the ``cipher_key`` along with other fields::
+
+    employee1 = Employee.objects.create(cipher_key=b"abcd", name="example", salary=2000, ssn="OneTwo")
+    employee2 = Employee(cipher_key=b"abcd", name="example", salary=2000, ssn="OneTwo")
+    employee2.save()
 
 
 Querying
 --------
 
-With Django 1.7, it is possible to filter on encrypted fields as you would normal fields via ``exact``, ``gt``, ``gte``,
-``lt``, and ``lte`` lookups. For example, querying the model above is possible like so::
+With Django 1.7 and on postgres databases, it is possible to filter on encrypted fields as you would normal fields via
+``exact``, ``gt``, ``gte``, ``lt``, and ``lte`` lookups. For example, querying the model above is possible like so.
+On other databases only ``exact`` is working. Since PostgreSQL supports native decryption.
 
-    Employee.objects.filter(date_hired__gt='1981-01-01', salary__lt=60000)
+Querying happens with a custom ``pgcrypto.PgCryptoQuerySet`` query set.
+::
+
+    Employee.objects.decrypt(b"abcd").filter(date_hired__gt='1981-01-01', salary__lt=60000)
 
 
 .. toctree::
