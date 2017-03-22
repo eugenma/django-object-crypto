@@ -1,4 +1,6 @@
-__version__ = '1.4.0'
+import six
+
+__version__ = '0.1.0'
 __version_info__ = (int(v) for v in __version__.split('.'))
 
 import base64
@@ -133,3 +135,11 @@ def aes_pad_key(key):
         return pad(key, 24, zero=True)
     else:
         return pad(key[:32], 32, zero=True)
+
+
+def is_encrypted(value):
+    """
+    Returns whether the given value is encrypted (and armored) or not.
+    """
+    return isinstance(value, six.string_types) and value.startswith('-----BEGIN')
+
