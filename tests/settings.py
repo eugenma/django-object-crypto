@@ -37,4 +37,4 @@ USE_I18N = True
 USE_L10N = True
 USE_TZ = True
 
-PGCRYPTO_DEFAULT_KEY = 'secret'
+PGCRYPTO_DEFAULT_KEY = b'secret'

@@ -24,3 +24,16 @@ lib64
 .project
 .pydevproject
 .settings
+
+
+# virtual env
+/env/
+cmd.exe.lnk
+
+# vim
+*~
+.*.swp
+
+# pycharm
+/.idea/
+pytest.ini

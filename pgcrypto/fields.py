@@ -3,7 +3,7 @@ from django.conf import settings
 from django.core import validators
 from django.db import models
 from django.utils import six, timezone
-from django.utils.encoding import force_text
+from django.utils.encoding import force_text, force_bytes
 from django.utils.translation import ugettext_lazy as _
 import django
 
@@ -27,7 +27,7 @@ class BaseEncryptedField (models.Field):
             if isinstance(self.cipher_key, six.text_type):
                 self.cipher_key = self.cipher_key.encode(self.charset)
             self.cipher_key = aes_pad_key(self.cipher_key)
-        mod = __import__('Crypto.Cipher', globals(), locals(), [self.cipher_name], 0)
+        mod = __import__('Cryptodome.Cipher', globals(), locals(), [self.cipher_name], 0)
         self.cipher_class = getattr(mod, self.cipher_name)
         self.check_armor = kwargs.pop('check_armor', True)
         self.versioned = kwargs.pop('versioned', False)
@@ -79,8 +79,10 @@ class BaseEncryptedField (models.Field):
             #    2. Decrypt the bytestring using the specified cipher.
             #    3. Unpad the bytestring using the cipher's block size.
             #    4. Decode the bytestring to a unicode string using the specified charset.
-            return unpad(self.get_cipher().decrypt(dearmor(value, verify=self.check_armor)),
-                         self.cipher_class.block_size).decode(self.charset)
+            dearmored = dearmor(value, verify=self.check_armor)
+            decrypted = self.get_cipher().decrypt(dearmored)
+            unpadded = unpad(decrypted, self.cipher_class.block_size).decode(self.charset)
+            return unpadded
         return value
 
     def from_db_value(self, value, expression, connection, context):
@@ -94,8 +96,10 @@ class BaseEncryptedField (models.Field):
             #    3. Pad the bytestring for encryption, using the cipher's block size.
             #    4. Encrypt the padded bytestring using the specified cipher.
             #    5. Armor the encrypted bytestring for storage in the text field.
-            return armor(self.get_cipher().encrypt(pad(force_text(value).encode(self.charset),
-                                                       self.cipher_class.block_size)), versioned=self.versioned)
+            padded = pad(force_bytes(value, self.charset),
+                        self.cipher_class.block_size)
+            encrypted = self.get_cipher().encrypt(padded)
+            return armor(encrypted, versioned=self.versioned)
         return value
 
 
