@@ -12,7 +12,7 @@ setup(
     name='django-object-crypto',
     version=get_version(),
     description='Python and Django utilities for per-object encryption using pgcrypto.',
-    long_description='Code base is from the original `django-pgcrypto package <https://github.com/dcwatson/django-pgcrypto> '
+    long_description='Code base is from the original `django-pgcrypto package <https://github.com/dcwatson/django-pgcrypto>`_',
     author='Eugen Massini, Dan Watson',
     author_email='eugen.massini@gmail.com',
     url='https://github.com/eugenma/django-object-crypto',
